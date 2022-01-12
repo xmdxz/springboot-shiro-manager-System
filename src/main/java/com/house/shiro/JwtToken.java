@@ -9,7 +9,7 @@ import org.apache.shiro.authc.AuthenticationToken;
  * @Date 2022/1/8 10:17
  */
 public class JwtToken implements AuthenticationToken {
-    
+
     private String token;
 
     public JwtToken(String token) {

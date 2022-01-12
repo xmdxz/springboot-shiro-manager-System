@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.ApplyDao">
+    <resultMap id="apply" type="com.house.pojo.Apply">
+        <id column="apply_id" property="id" jdbcType="INTEGER"/>
+        <id column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="DOUBLE"/>
+        <result column="price" property="price" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idCard" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="applyOut" type="com.house.pojo.ApplyOut">
+        <id column="aoid" property="id" jdbcType="INTEGER"/>
+        <id column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idCard" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="apply">
+        apply_id,house_id,address,area,price,`status`,name,phone,idCard
+    </sql>
+    <sql id="applyOut">
+        aoid,house_id,address,`status`,name,phone,idCard
+    </sql>
+
+    <select id="getAllApply" resultMap="apply">
+        select
+        <include refid="apply">
+        </include>
+        from apply left join userlist u on u.id = apply.userlist_id where status = '申请中'
+    </select>
+
+    <select id="getApplyCount" resultType="java.lang.Integer">
+        select count(*)
+        from apply where status = '申请中'
+    </select>
+
+    <select id="getAllApplyOut" resultMap="applyOut">
+        select
+        <include refid="applyOut">
+        </include>
+        from applyout left join userlist u on u.id = applyout.userlist_id
+    </select>
+
+    <select id="getApplyOutCount" resultType="java.lang.Integer">
+        select count(*)
+        from applyout
+    </select>
+
+    <update id="updateApply">
+        update apply
+        <set>
+            <if test="houseId != null">
+                house_id = #{houseId,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=DOUBLE},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where apply_id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <update id="updateApplyOut">
+        update applyout
+        <set>
+            <if test="houseId != null">
+                house_id = #{houseId,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where aoid = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="deleteApplyOut">
+        delete from applyout where aoid = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertApply">
+        insert into apply(house_id, address, area, price, status, userlist_id)
+            values (#{houseId,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{area,jdbcType=DOUBLE},#{price,jdbcType=DOUBLE},#{status,jdbcType=VARCHAR},#{userListId,jdbcType=INTEGER})
+    </insert>
+
+    <insert id="insertApplyOut">
+        insert into applyout(house_id, address, status, userlist_id) VALUES (#{houseId,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{status,jdbcType=VARCHAR},#{userListId,jdbcType=INTEGER})
+    </insert>
+
+    <select id="getZuAllApply" resultMap="apply">
+        select
+        <include refid="apply">
+        </include>
+        from apply left join userlist u on u.id = apply.userlist_id where apply.userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getZuApplyCount" resultType="java.lang.Integer">
+        select count(*) from apply where userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getZuAllApplyOut" resultMap="applyOut">
+        select
+        <include refid="applyOut">
+        </include>
+        from applyout left join userlist u on u.id = applyout.userlist_id where userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getZuApplyOutCount" resultType="java.lang.Integer">
+        select count(*) from applyout where userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>

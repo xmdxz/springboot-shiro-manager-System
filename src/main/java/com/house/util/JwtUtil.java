@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -25,26 +26,34 @@ public class JwtUtil {
         JwtUtil.salt = salt;
     }
 
-    public void setSeconds(long seconds) {
-        JwtUtil.seconds = seconds;
+    public void setTimeout(long timeout) {
+        JwtUtil.seconds = timeout;
     }
 
-    public String getJwtToken(Map<String, Object> body) {
+    public static String getJwtToken(Map<String, Object> body) {
         Calendar instance = Calendar.getInstance();
         body.put("createTime", instance.getTime());
         instance.add(Calendar.SECOND, (int) seconds);
         return JWT.create().withPayload(body).withExpiresAt(instance.getTime()).sign(Algorithm.HMAC256(salt));
     }
 
-    public Object getBodyMessage(String key, String token) {
+    public static String getJwtToken(String key, String value) {
+        Calendar instance = Calendar.getInstance();
+        Date createTime = instance.getTime();
+        instance.add(Calendar.SECOND, (int) seconds);
+        return JWT.create().withClaim(key, value).withClaim("createTime", createTime).withExpiresAt(instance.getTime()).sign(Algorithm.HMAC256(salt));
+    }
+
+    public static Object getBodyMessage(String key, String token) {
         return JWT.decode(token).getClaim(key);
     }
 
-    public boolean signToken(String token) {
+    public static boolean signToken(String token) {
         try {
             JWT.require(Algorithm.HMAC256(salt)).build().verify(token);
             return true;
         } catch (JWTVerificationException e) {
+            e.printStackTrace();
             return false;
         }
     }

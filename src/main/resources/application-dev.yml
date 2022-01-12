@@ -8,6 +8,7 @@ logging:
   config: classpath:config/log4j2.xml
   level:
     com.house.dao: debug
+    com.house: debug
     org.springframework.web: debug
 #mybatis配置
 mybatis:
@@ -33,8 +34,18 @@ spring:
         # 数据库连接超时时间,默认30秒，即30000
       connection-timeout: 30000
       connection-test-query: SELECT 1
+  #jsakon
+  jackson:
+    #忽略null
+    default-property-inclusion: non_null
+  main:
+    allow-bean-definition-overriding: true
 #jwt盐值
 jwt:
   salt: qwertyuiop;'\[
-  timeout: 1800
+  timeout: 10080
 
+pagehelper:
+  helper-dialect: mysql
+  reasonable: false
+  support-methods-arguments: true

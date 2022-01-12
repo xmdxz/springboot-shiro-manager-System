@@ -9,7 +9,7 @@ import lombok.ToString;
 @Data
 @ToString
 public class Apply {
-    private Integer applyId;
+    private Integer id;
 
     private String houseId;
 
@@ -20,6 +20,12 @@ public class Apply {
     private Double price;
 
     private String status;
+
+    private String name;
+
+    private String phone;
+
+    private String idCard;
 
     private Integer userListId;
 

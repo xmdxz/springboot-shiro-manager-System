@@ -9,13 +9,19 @@ import lombok.ToString;
 @Data
 @ToString
 public class ApplyOut {
-    private Integer aoId;
+    private Integer id;
 
     private String houseId;
 
     private String address;
 
     private String status;
+
+    private String name;
+
+    private String phone;
+
+    private String idCard;
 
     private Integer userListId;
 }

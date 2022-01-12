@@ -16,10 +16,57 @@
     <sql id="BASE" >
         id,username,password,type,salt
     </sql>
-    <select id="selectUserByUserName" resultType="com.house.pojo.User">
+    <select id="selectUserByUserName" resultMap="user">
         select
         <include refid="BASE">
         </include>
         from user where username = #{userName,jdbcType=VARCHAR}
     </select>
+
+    <select id="selectUserById" resultMap="user">
+        select
+        <include refid="BASE">
+        </include>
+        from user where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectTypeById" resultType="java.lang.String">
+        select type from user where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getUsers" resultType="com.house.pojo.dto.UserDto">
+        select user.id as id,u.id as userInfoId,name,phone,idcard from user left join userlist u on user.id = u.user_id
+    </select>
+
+    <select id="getUserCount" resultType="java.lang.Integer">
+        select count(*) from user left join userlist u on user.id = u.user_id
+    </select>
+
+    <delete id="deleteUser">
+        delete from user where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteUserInfo">
+        delete from userlist where user_id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getUserInfoId" resultType="java.lang.Integer">
+        select id from userlist where user_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateUserInfo">
+        update userlist
+            <set>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="idCard != null">
+                    idcard = #{idCard,jdbcType=VARCHAR},
+                </if>
+                <if test="phone != null">
+                    phone = #{phone,jdbcType=VARCHAR},
+                </if>
+            </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
 </mapper>

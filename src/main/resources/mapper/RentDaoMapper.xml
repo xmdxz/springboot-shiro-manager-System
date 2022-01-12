@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.RentDao">
+    <resultMap id="rent" type="com.house.pojo.dto.RentInfo">
+        <id column="zid" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idCard" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+        <result column="contract_id" property="contractId" jdbcType="INTEGER"/>
+        <result column="userlist_id" property="userInfoId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <resultMap id="checkout" type="com.house.pojo.dto.RentInfo">
+        <id column="cid" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="idcard" property="idCard" jdbcType="VARCHAR"/>
+        <result column="phone" property="phone" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Rent">
+        zid,house_id,price,address,`name`,idcard,phone,contract_id,userlist_id
+    </sql>
+
+    <sql id="checkout">
+        cid,house_id,address,`status`,`name`,idcard,phone
+    </sql>
+
+    <select id="selectAllRentInfo" resultMap="rent">
+        select
+        <include refid="Rent">
+        </include>
+        from zulist left join userlist u on zulist.userlist_id = u.id
+    </select>
+
+    <select id="selectRentCount" resultType="java.lang.Integer">
+        select count(*)
+        from zulist
+    </select>
+
+    <delete id="deleteContract">
+        delete
+        from hetong
+        where id = #{contractId,jdbcType=INTEGER}
+    </delete>
+
+    <select id="selectContractById" resultType="com.house.pojo.Contract">
+        select id,
+               chuzu        as chuZu,
+               chuzu_idcard as chuZuIdCard,
+               zuke         as zuKe,
+               zuke_idcard  as zuKeIdCard,
+               fromdate     as fromDate,
+               todate       as toDate,
+               price,
+               address,
+               house_id     as houseId,
+               payday
+        from hetong
+        where id = #{contractId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectAllCheckout" resultMap="checkout">
+        select
+        <include refid="checkout">
+        </include>
+        from checkout left join userlist u on u.id = checkout.userlist_id
+    </select>
+
+    <select id="selectCheckoutCount" resultType="java.lang.Integer">
+        select count(*)
+        from checkout
+    </select>
+
+    <delete id="deleteCheckout">
+        delete
+        from checkout
+        where cid = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <update id="updateContract">
+        update hetong
+        <set>
+            <if test="chuZu != null">
+                chuzu = #{chuZu,jdbcType=VARCHAR},
+            </if>
+            <if test="chuZuIdCard != null">
+                chuzu_idcard = #{chuZuIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="zuKe != null">
+                zuke = #{zuKe,jdbcType=VARCHAR},
+            </if>
+            <if test="zuKeIdCard != null">
+                zuke_idcard = #{zuKeIdCard,jdbcType=VARCHAR},
+            </if>
+            <if test="fromDate != null">
+                fromdate = #{fromDate,jdbcType=VARCHAR},
+            </if>
+            <if test="toDate != null">
+                todate = #{toDate,jdbcType=VARCHAR},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="houseId != null">
+                house_id = #{houseId,jdbcType=VARCHAR},
+            </if>
+            <if test="payday != null">
+                payday = #{payday,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <select id="getZuRents" resultMap="rent">
+        select
+        <include refid="Rent">
+        </include>
+        from zulist left join userlist u on zulist.userlist_id = u.id where zulist.userlist_id =
+        #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="getZuRentCount" resultType="java.lang.Integer">
+        select count(*)
+        from zulist
+        where userlist_id = #{userId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectZuAllCheckout" resultMap="rent">
+        select
+        <include refid="checkout">
+        </include>
+        from checkout left join userlist u on u.id = checkout.userlist_id where userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectZuCheckoutCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from checkout where userlist_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getZuById" resultMap="rent">
+        select
+        <include refid="Rent">
+        </include>
+        from zulist left join userlist u on zulist.userlist_id = u.id where zid = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>

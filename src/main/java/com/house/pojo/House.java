@@ -8,7 +8,7 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class HouseList {
+public class House {
     private Integer id;
 
     private String houseId;

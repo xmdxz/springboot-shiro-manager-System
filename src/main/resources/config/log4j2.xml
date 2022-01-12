@@ -3,7 +3,7 @@
     <Properties>
         <!-- 高亮显示：-Dlog4j.skipJansi=false -->
         <property name="PATTERN">
-            %clr{%d{yyyy-MM-dd HH:mm:ss.SSS}} %clr{%-5level} %clr{[%t]} %clr{%c{1.}.%M(%L)}%clr{:} %msg%n
+            %highlight{%d{yyyy-MM-dd HH:mm:ss.SSS}} %highlight{%-5level} %highlight{[%t]} %highlight{%c{1.}.%M(%L)}%highlight{:} %msg%n
         </property>
     </Properties>
 

@@ -8,7 +8,7 @@ import lombok.ToString;
  */
 @ToString
 @Data
-public class UserList {
+public class UserInfo {
     private Integer id;
 
     private String idCard;
