@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.PaidDao">
+
+    <resultMap id="toPaid" type="com.house.pojo.ToPaid">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="userlist_id" property="userListId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="paid" type="com.house.pojo.Paid">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="paydate" property="payDate" jdbcType="DATE"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="userlist_id" property="userListId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="toPaid">
+        id,house_id,address,price,`date`,`name`,userlist_id,`status`
+    </sql>
+    <sql id="Paid">
+        id,house_id,address,price,`date`,paydate,`name`,userlist_id,`status`
+    </sql>
+
+    <select id="getAllToPaid" resultMap="toPaid">
+        select
+        <include refid="toPaid">
+        </include>
+        from topaid
+    </select>
+
+    <select id="getAllToPaidCount" resultType="java.lang.Integer">
+        select count(*) from topaid
+    </select>
+
+    <select id="getAllPaid" resultMap="paid">
+        select
+        <include refid="Paid">
+        </include>
+        from paid
+        <where>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="getAllPaidCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from paid
+        <where>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deletePaid">
+        delete from paid where id = #{id,jdbcType=INTEGER}
+    </delete>
+</mapper>

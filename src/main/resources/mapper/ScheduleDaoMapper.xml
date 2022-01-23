@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.ScheduleDao">
+    <sql id="schedule">
+        id,date,content
+    </sql>
+
+    <select id="getSchedules" resultType="com.house.pojo.Schedule">
+        select
+        <include refid="schedule">
+        </include>
+        from schedule
+    </select>
+
+    <select id="getScheduleCount" resultType="java.lang.Integer">
+        select count(*) from schedule
+    </select>
+
+    <delete id="deleteSchedule">
+        delete from schedule where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getSchedule" resultType="com.house.pojo.Schedule">
+        select
+        <include refid="schedule">
+        </include>
+        from schedule where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateSchedule">
+        update schedule
+            <set>
+                <if test="date != null ">
+                    date = #{date,jdbcType=VARCHAR},
+                </if>
+                <if test="content != null">
+                    content = #{content,jdbcType=VARCHAR},
+                </if>
+            </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <delete id="addSchedule">
+        insert into schedule(date, content) VALUES (#{date,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR})
+    </delete>
+</mapper>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.FaultDao">
+    <resultMap id="wrong" type="com.house.pojo.Wrong">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="detail" property="detail" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="userlist_id" property="userListId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="solve" type="com.house.pojo.Solve">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="house_id" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="date" property="date" jdbcType="DATE"/>
+        <result column="detail" property="detail" jdbcType="VARCHAR"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="userlist_id" property="userListId" jdbcType="INTEGER"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+    <sql id="BASE">
+        id,house_id,address,date,detail,name,userlist_id,status
+    </sql>
+
+    <select id="getAllFault" resultMap="wrong">
+        select
+        <include refid="BASE">
+        </include>
+        from wrong
+    </select>
+
+    <select id="getFaultCount" resultType="java.lang.Integer">
+        select count(*)
+        from wrong
+    </select>
+
+    <select id="getSolves" resultMap="solve">
+        select
+        <include refid="BASE">
+        </include>
+        from solve
+        <where>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="getSolvesCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from solve
+        <where>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteSolve">
+        delete
+        from solve
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <insert id="insertSolve">
+        insert into solve(house_id, address, date, detail, name, userlist_id, status)
+        VALUES (#{houseId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{date,jdbcType=DATE},
+                #{detail,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userListId,jdbcType=INTEGER},
+                #{status,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectWrongById" resultMap="wrong">
+        select
+        <include refid="BASE">
+        </include>
+        from wrong where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateWrong">
+        update wrong
+        <set>
+            <if test="houseId != null">
+                house_id = #{houseId,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="date != null">
+                `date` = #{date,jdbcType=DATE},
+            </if>
+            <if test="detail != null">
+                detail = #{detail,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null">
+                `name` = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="userListId != null">
+                userlidt_id = #{userListId,jdbcType=INTEGER},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+
+    <insert id="insertWrong">
+        insert into wrong(house_id, address, date, detail, name, userlist_id, status)
+        VALUES (#{houseId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{date,jdbcType=DATE},
+                #{detail,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{userListId,jdbcType=INTEGER},
+                #{status,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="getZuSolves" resultMap="solve">
+        select
+        <include refid="BASE">
+        </include>
+        from solve
+        <where>
+            <if test="userInfoId != null">
+                and userlist_id = #{userInfoId,jdbcType=INTEGER}
+            </if>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="getZuSolvesCount" resultType="java.lang.Integer">
+        select
+        count(*)
+        from solve
+        <where>
+            <if test="userInfoId != null">
+                and userlist_id = #{userInfoId,jdbcType=INTEGER}
+            </if>
+            <if test="name != null">
+                and `name` like "%" #{name,jdbcType=VARCHAR} "%"
+            </if>
+            <if test="fromDate != null">
+                and `date` &gt;= #{fromDate,jdbcType=DATE}
+            </if>
+            <if test="toDate != null">
+                and 'date' &lt;= #{toDate,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+</mapper>

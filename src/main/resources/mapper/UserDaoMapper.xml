@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.UserDao">
+
+    <resultMap id="user" type="com.house.pojo.User">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BASE" >
+        id,username,password,type,salt
+    </sql>
+    <select id="selectUserByUserName" resultMap="user">
+        select
+        <include refid="BASE">
+        </include>
+        from user where username = #{userName,jdbcType=VARCHAR}
+    </select>
+
+    <select id="selectUserById" resultMap="user">
+        select
+        <include refid="BASE">
+        </include>
+        from user where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectTypeById" resultType="java.lang.String">
+        select type from user where id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <select id="getUsers" resultType="com.house.pojo.dto.UserDto">
+        select user.id as id,u.id as userInfoId,name,phone,idcard from user left join userlist u on user.id = u.user_id
+    </select>
+
+    <select id="getUserCount" resultType="java.lang.Integer">
+        select count(*) from user left join userlist u on user.id = u.user_id
+    </select>
+
+    <delete id="deleteUser">
+        delete from user where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <delete id="deleteUserInfo">
+        delete from userlist where user_id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getUserInfoId" resultType="java.lang.Integer">
+        select id from userlist where user_id = #{id,jdbcType=INTEGER}
+    </select>
+
+    <update id="updateUserInfo">
+        update userlist
+            <set>
+                <if test="name != null">
+                    name = #{name,jdbcType=VARCHAR},
+                </if>
+                <if test="idCard != null">
+                    idcard = #{idCard,jdbcType=VARCHAR},
+                </if>
+                <if test="phone != null">
+                    phone = #{phone,jdbcType=VARCHAR},
+                </if>
+            </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

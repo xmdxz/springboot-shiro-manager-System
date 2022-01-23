@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.house.dao.HouseDao">
+
+    <resultMap id="Base" type="com.house.pojo.House">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <id column="houseid" property="houseId" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="area" property="area" jdbcType="DOUBLE"/>
+        <result column="price" property="price" jdbcType="DOUBLE"/>
+        <result column="status" property="status" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="BASE">
+        id,houseid,address,area,price,status
+    </sql>
+    <select id="selectHouse" resultMap="Base">
+        select
+        <include refid="BASE">
+        </include>
+        from houselist
+    </select>
+
+    <select id="selectHouseCount" resultType="java.lang.Integer">
+        select count(*) from houselist
+    </select>
+
+    <update id="updateHouse">
+        update houselist
+        <set>
+            <if test="houseId != null">
+                houseId = #{houseId,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                address = #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="area != null">
+                area = #{area,jdbcType=DOUBLE},
+            </if>
+            <if test="price != null">
+                price = #{price,jdbcType=DOUBLE},
+            </if>
+            <if test="status != null">
+                `status` = #{status,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER} or houseid = #{houseId,jdbcType=VARCHAR}
+    </update>
+
+    <delete id="addHouse">
+        insert into houselist(houseid, address, area, price, status) VALUES(#{houseId,jdbcType=VARCHAR},#{address,jdbcType=VARCHAR},#{area,jdbcType=DOUBLE},#{price,jdbcType=DOUBLE},#{status,jdbcType=VARCHAR})
+    </delete>
+
+    <delete id="deleteHouse">
+        delete from houselist where id = #{id,jdbcType=INTEGER}
+    </delete>
+
+    <select id="getHouseById" resultMap="Base">
+        select
+        <include refid="BASE">
+        </include>
+        from houselist where id = #{id,jdbcType=INTEGER}
+    </select>
+</mapper>
